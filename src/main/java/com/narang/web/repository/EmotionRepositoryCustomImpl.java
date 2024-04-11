@@ -24,17 +24,17 @@ public class EmotionRepositoryCustomImpl implements EmotionRepositoryCustom {
     @Override
     public List<Emotion> findByUid(String uid) {
         Criteria cr = new Criteria("uid").is(uid);
-        Query q = new Query();
+        Query q = new Query(cr);
         List<Emotion> foundEmotion = emotionTemplate.find(q, Emotion.class);
         return foundEmotion;
     }
 
     @Override
-    public Optional<Emotion> findByDid(String did) {
+    public Emotion findByDid(String did) {
         Criteria cr = new Criteria("did").is(did);
-        Query q = new Query();
+        Query q = new Query(cr);
         Emotion foundEmotion = emotionTemplate.findOne(q, Emotion.class);
-        return Optional.of(foundEmotion);
+        return foundEmotion;
     }
 
     @Override

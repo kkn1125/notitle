@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface EmotionRepositoryCustom {
     public List<Emotion> findByUid(String uid);
 
-    public Optional<Emotion> findByDid(String did);
+    public Emotion findByDid(String did);
     public List<Emotion> findByDate(String uid, LocalDateTime start, LocalDateTime end);
 
     public Boolean deleteByDid(String did);

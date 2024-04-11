@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EmotionService {
@@ -28,7 +29,7 @@ public class EmotionService {
         return emotionRepository.findByUid(uid);
     }
     public Emotion findByDid(String did) {
-        return emotionRepository.findByDid(did).orElseThrow();
+        return emotionRepository.findByDid(did);
     }
     public List<Emotion> findByDate(String uid, LocalDateTime start, LocalDateTime end) {
         return emotionRepository.findByDate(uid, start, end);

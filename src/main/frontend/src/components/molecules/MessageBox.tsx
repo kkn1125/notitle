@@ -1,4 +1,3 @@
-import MailIcon from "@mui/icons-material/Mail";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import {
   Badge,
@@ -12,6 +11,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
 import { findCommentAll } from "../../apis/comment";
+import { CommentContext, loadComment } from "../../contexts/CommentProvider";
 import { UserContext } from "../../contexts/UserProvider";
 import AvatarBox from "./AvatarBox";
 
@@ -19,6 +19,7 @@ const menuId = "primary-search-account-menu";
 
 function MessageBox() {
   const navigate = useNavigate();
+  const [comments, commentDispatch] = useContext(CommentContext);
   const [user, dispatch] = useContext(UserContext);
   const [cookies, setCookie] = useCookies(["token"]);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -27,29 +28,34 @@ function MessageBox() {
   useEffect(() => {
     if (cookies.token) {
       findCommentAll().then((result) => {
-        result.forEach(
-          (comment: {
-            id: string;
-            mention: string;
-            author: string;
-            content: string;
-            did: string;
-          }) => {
-            if (comment.mention.indexOf(user.nickName) > -1) {
-              setMentionInfo(
-                mentionInfo.concat({
-                  id: comment.id,
-                  from: comment.author,
-                  content: comment.content,
-                  diaryId: comment.did,
-                }),
-              );
-            }
-          },
-        );
+        commentDispatch(loadComment(result));
       });
     }
   }, []);
+
+  useEffect(() => {
+    comments.forEach(
+      (comment: {
+        id: string;
+        mention: string;
+        author: string;
+        content: string;
+        did: string;
+      }) => {
+        if (comment.mention.indexOf(user.nickName) > -1) {
+          setMentionInfo(
+            mentionInfo.concat({
+              id: comment.id,
+              from: comment.author,
+              content: comment.content,
+              diaryId: comment.did,
+            }),
+          );
+          console.log(mentionInfo);
+        }
+      },
+    );
+  }, [comments]);
 
   const handleOpenMentionMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

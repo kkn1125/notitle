@@ -1,12 +1,8 @@
 import { Container, Stack } from "@mui/material";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { findCommentByDid, insertComment } from "../../apis/comment";
-import {
-  CommentContext,
-  loadComment,
-  setComment,
-} from "../../contexts/CommentProvider";
+import { CommentContext, loadComment } from "../../contexts/CommentProvider";
 import { UserContext } from "../../contexts/UserProvider";
 import Comment from "../../models/Comment";
 import { reverse } from "../../tools/utils";
@@ -18,12 +14,6 @@ function CommentList() {
   const [comments, commentDispatch] = useContext(CommentContext);
   const [user, dispatch] = useContext(UserContext);
   const [content, setContent] = useState("");
-
-  useEffect(() => {
-    findCommentByDid(params.id).then((result: any[]) => {
-      commentDispatch(loadComment(result));
-    });
-  }, [params.id]);
 
   const addComment = (newComment: any) => {
     const comment = new Comment();
@@ -72,10 +62,11 @@ function CommentList() {
         sx={{
           mb: 10,
         }}>
-        {comments.length === 0 && (
-          <CommentItem>등록된 댓글이 없습니다 🥲</CommentItem>
-        )}
-        {reverse(comments).map((comment: any, idx: React.Key) => (
+        {comments.filter((comment: any) => comment.did === params.id).length ===
+          0 && <CommentItem>등록된 댓글이 없습니다 🥲</CommentItem>}
+        {reverse(
+          comments.filter((comment: any) => comment.did === params.id),
+        ).map((comment: any, idx: React.Key) => (
           <CommentItem key={idx} comment={comment} />
         ))}
       </Stack>

@@ -25,7 +25,7 @@ interface Action {
 
 const initialValues: any[] = [];
 
-export const CommentContext = createContext(null);
+export const CommentContext = createContext([]);
 
 export const loadComment = (comments: any[]) => ({
   type: LOAD_COMMENT,
